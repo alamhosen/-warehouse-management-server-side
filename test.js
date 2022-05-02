@@ -1,11 +1,4 @@
- // get all products
- app.get('/product', async(req, res) =>{
-    const query = {};
-    const cursor = productCollection.find(query);
-    const products = await cursor.toArray();
-    res.send(products);
-})
-
+ 
 // get single product
 app.get('/product/:id', async (req, res) =>{
     const id = req.params.id;

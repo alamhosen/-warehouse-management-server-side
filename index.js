@@ -12,14 +12,21 @@ app.use(express.json());
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ktjvo.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
-async function run () {
-    try{
+async function run() {
+    try {
         await client.connect();
         const productCollection = client.db('goldenGrocery').collection('product');
 
+        // get all products
+        app.get('/product', async (req, res) => {
+            const query = {};
+            const cursor = productCollection.find(query);
+            const products = await cursor.toArray();
+            res.send(products);
+        })
 
     }
-    finally{}
+    finally { }
 }
 run().catch(console.dir);
 
