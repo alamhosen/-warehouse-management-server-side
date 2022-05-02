@@ -16,6 +16,7 @@ async function run() {
     try {
         await client.connect();
         const productCollection = client.db('goldenGrocery').collection('product');
+        const myItemCollection = client.db('goldenGrocery').collection('myitems');
 
         // get all products
         app.get('/product', async (req, res) => {
@@ -61,6 +62,29 @@ async function run() {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const result = await productCollection.deleteOne(query);
+            res.send(result);
+        })
+
+        // my item collection
+        app.get('/myitems', async (req, res) => {
+            const email = req.query.email;
+                const query = { email: email };
+                const cursor = myItemCollection.find(query);
+                const items = await cursor.toArray();
+                res.send(items);
+        })
+
+        app.post('/myitems', async(req, res) =>{
+            const items = req.body;
+            const result = await myItemCollection.insertOne(items);
+            res.send(result);
+        })
+
+        // delete my items
+        app.delete('/myitems/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await myItemCollection.deleteOne(query);
             res.send(result);
         })
 
